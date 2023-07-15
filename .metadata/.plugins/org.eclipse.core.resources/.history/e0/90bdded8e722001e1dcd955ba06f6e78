@@ -1,0 +1,18 @@
+package Formul;
+import ilog.concert.*;
+import ilog.cplex.*;
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
+public class Formulation {
+
+	public static void main(String[] args) throws IOException {
+		// TODO Auto-generated method stub
+		
+		model();
+	}
+
+	public static void model() throws IOException{
+		int[] T = new int[];
+	}
+}

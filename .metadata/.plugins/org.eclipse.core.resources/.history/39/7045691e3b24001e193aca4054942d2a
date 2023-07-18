@@ -11,6 +11,10 @@ public class GetData {
 	public static int K = 0;
 	public static int Q = 0;
 	public static double[][] d;
+	public static int[][] speed;
+	public static int[] delivery;
+	public static int[] pickup;
+	public static double[][] std;
 	
 	public static void main(String[] args) {
 		
@@ -19,7 +23,7 @@ public class GetData {
 		
 		try {
 			List<String> allLines = Files.readAllLines(path);
-			n= 8;
+			n= 10;
 			K= 3;
 			d = new double [n][n];
 			
@@ -36,7 +40,7 @@ public class GetData {
 			System.out.println("거리는");
 			for(int i=0; i<n; i++) {
 				for(int j=0; j<n; j++) {
-					System.out.print(d[i][j]+" ");
+					System.out.print((int)d[i][j]+" ");
 				}
 				System.out.println();
 			}

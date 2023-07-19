@@ -150,8 +150,8 @@ public class Formulation {
 			}
 
 			IloLinearNumExpr[][][][] const4 = new IloLinearNumExpr[n][n][days][l];
-			for (int i = 1; i < n; i++) {
-				for (int j = 1; j < n; j++) {
+			for (int i = 0; i < n; i++) {
+				for (int j = 0; j < n; j++) {
 					for (int t = 1; t < days; t++) {
 						for (int k = 0; k < l; k++) {
 							if (i != j) {
@@ -179,7 +179,7 @@ public class Formulation {
 			cplex.setParam(IloCplex.Param.Simplex.Display, 0);
 			long startTime = System.currentTimeMillis();
 			
-			//cplex.exportModel("test.lp");
+			cplex.exportModel("test.lp");
 			cplex.solve();
 			long endTime = System.currentTimeMillis();
 			System.out.println("Running time : " + (endTime - startTime) / 1000. + "sec");

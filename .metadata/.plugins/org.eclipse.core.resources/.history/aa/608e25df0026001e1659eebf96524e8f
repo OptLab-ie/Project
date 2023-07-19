@@ -14,13 +14,13 @@ public class GetData {
 	
 	public static void main(String[] args) {
 		
-		Path path = Paths.get("//Users/hijieung/Desktop/Opt_Project/Project/Data/남구 데이터 텍스트.txt");
+		Path path = Paths.get("/Users/hijieung/Desktop/남구 데이터 텍스트.txt");
 		
 		
 		try {
 			List<String> allLines = Files.readAllLines(path);
-			n= 10;
-			K= 2;
+			n= 8;
+			K= 3;
 			d = new double [n][n];
 			
 			for(int i=0; i<n; i++) {

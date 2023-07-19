@@ -1,0 +1,56 @@
+package Formul;
+import java.io.*;
+import java.nio.file.Paths;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.*;
+
+public class GetData {
+
+	public static int n = 0;
+	public static int K = 0;
+	public static int Q = 0;
+	public static double[][] d;
+	public static int[][] speed;
+	public static int[] delivery;
+	public static int[] pickup;
+	public static double[][] std;
+	
+	public static void main(String[] args) {
+		
+		Path path = Paths.get("/Users/hijieung/Desktop/남구 데이터 텍스트.txt");
+		
+		
+		try {
+			List<String> allLines = Files.readAllLines(path);
+			n= 10;
+			K= 3;
+			d = new double [n][n];
+			
+			for(int i=0; i<n; i++) {
+				String[] tmpdata = allLines.get(i).split(",");
+				for(int j=0; j<n; j++) {
+					d[i][j] = Double.parseDouble(tmpdata[j]);
+				}
+			}
+			
+			System.out.println("n: "+n);
+			System.out.println("K: "+K);
+			System.out.println();
+			System.out.println("거리는");
+			for(int i=0; i<n; i++) {
+				for(int j=0; j<n; j++) {
+					System.out.print((int)d[i][j]+" ");
+				}
+				System.out.println();
+			}
+			
+		}
+		catch(IOException ie) {
+			ie.printStackTrace();
+		}
+		
+		
+	}
+
+}

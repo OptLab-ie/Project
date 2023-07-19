@@ -32,7 +32,7 @@ public class Formulation {
 		// ****** 여기서부터 데이터 임의로 설정 ********
 		double[][] tmpDis = new double[n][n];
 		tmpDis = GetData.d;
-		int days = 2;
+		int days = 5;
 		for (int i = 0; i < n; i++) {
 			T.add(new ArrayList<>());
 			for (int t = 1; t < days; t++) {
@@ -179,7 +179,7 @@ public class Formulation {
 			cplex.setParam(IloCplex.Param.Simplex.Display, 0);
 			long startTime = System.currentTimeMillis();
 			
-			//cplex.exportModel("test.lp");
+			cplex.exportModel("test.lp");
 			cplex.solve();
 			long endTime = System.currentTimeMillis();
 			System.out.println("Running time : " + (endTime - startTime) / 1000. + "sec");

@@ -11,19 +11,16 @@ public class GetData {
 	public static int K = 0;
 	public static int Q = 0;
 	public static double[][] d;
-	public static int[][] speed;
-	public static int[] delivery;
-	public static int[] pickup;
-	public static double[][] std;
 	
 	public static void main(String[] args) {
 		
-		Path path = Paths.get("/Users/hijieung/Desktop/남구 데이터 텍스트.txt");
+		Path path = Paths.get("C:\\Users\\최적화_연구실_PC1\\OneDrive - Chonnam National University\\바탕 화면\\OptLab-Project\\Project\\2023Project\\"
+				+ "/south-data.txt");
 		
 		
 		try {
 			List<String> allLines = Files.readAllLines(path);
-			n= 10;
+			n= 8;
 			K= 3;
 			d = new double [n][n];
 			
@@ -40,7 +37,7 @@ public class GetData {
 			System.out.println("거리는");
 			for(int i=0; i<n; i++) {
 				for(int j=0; j<n; j++) {
-					System.out.print((int)d[i][j]+" ");
+					System.out.print(d[i][j]+" ");
 				}
 				System.out.println();
 			}

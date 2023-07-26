@@ -19,7 +19,7 @@ public class GetData {
 		
 		try {
 			List<String> allLines = Files.readAllLines(path);
-			n= 10;
+			n= 89;
 			K= 2;
 			d = new double [n][n];
 			

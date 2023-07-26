@@ -32,42 +32,39 @@ public class Formulation {
 		// ****** 여기서부터 데이터 임의로 설정 ********
 		double[][] tmpDis = new double[n][n];
 		tmpDis = GetData.d;
-		int days = 2;
+		
+		// 공사현장i에 방문하기 시작할 수 있는 날
+		int[] startDay = GetData.T;
+		
+		// 6월기준 30일까지 
+		int endDay = 31;
 		for (int i = 0; i < n; i++) {
 			T.add(new ArrayList<>());
-			for (int t = 1; t < days; t++) {
-				T.get(i).add(t);
+			for (int day = startDay[i]; day < endDay; day++) {
+				T.get(i).add(day);
 //				System.out.println(T.get(i).get(t-1));
 			}
 		}
 
 		for (int k = 0; k < l; k++) {
-			Q[k] = 10000; //
+			Q[k] = 240; //
 		}
+		
+		d = GetData.s;
+		w = GetData.w;
 
-		for (int j = 0; j < n; j++) {
-			d[j] = 10;
-		}
-
-		for (int i = 0; i < n; i++) {
-			for (int j = 0; j < n; j++) {
-				for (int k = 0; k < l; k++) {
-					w[i][j][k] = 10;
-				}
-			}
-		}
 		// ****** 여기까지 데이터 임의로 설정 ********
 		
 		try {
 			IloCplex cplex = new IloCplex();
 
 			// 결정변수
-			IloNumVar[][][][] x = new IloNumVar[n][n][days][l];
+			IloNumVar[][][][] x = new IloNumVar[n][n][endDay][l];
 
 			// 비음 제약식
 			for (int i = 0; i < n; i++) {
 				for (int j = 0; j < n; j++) {
-					for (int t = 1; t < days; t++) {
+					for (int t = 1; t < endDay; t++) {
 						if (T.get(i).contains(t) == T.get(j).contains(t)) {
 							x[i][j][t] = cplex.numVarArray(l, 0, 1, IloNumVarType.Int);
 						}
@@ -78,9 +75,9 @@ public class Formulation {
 				}
 			}
 
-			IloNumVar[][][] u = new IloNumVar[n][days][l];
+			IloNumVar[][][] u = new IloNumVar[n][endDay][l];
 			for (int i = 1; i < n; i++) {
-				for (int t = 1; t < days; t++) {
+				for (int t = 1; t < endDay; t++) {
 					for (int k = 0; k < l; k++) {
 						if (T.get(i).contains(t))
 							u[i][t][k] = cplex.numVar(0, Q[k]);
@@ -96,7 +93,7 @@ public class Formulation {
 			for (int i = 0; i < n; i++) {
 				for (int j = 0; j < n; j++) {
 					for (int k = 0; k < l; k++) {
-						for (int t = 1; t < days; t++) {
+						for (int t = 1; t < endDay; t++) {
 							if (T.get(i).contains(t) == T.get(j).contains(t))
 								objective.addTerm(tmpDis[i][j], x[i][j][t][k]);
 						}
@@ -105,10 +102,10 @@ public class Formulation {
 			}
 
 			// 제약식
-			IloLinearNumExpr[][][] const1 = new IloLinearNumExpr[n][days][l];
+			IloLinearNumExpr[][][] const1 = new IloLinearNumExpr[n][endDay][l];
 			for (int j = 0; j < n; j++) {
 				for (int k = 0; k < l; k++) {
-					for (int t = 1; t < days; t++) {
+					for (int t = 1; t < endDay; t++) {
 						const1[j][t][k] = cplex.linearNumExpr();
 						for (int i = 0; i < n; i++) {
 							if (T.get(i).contains(t) == T.get(j).contains(t)) {
@@ -124,7 +121,7 @@ public class Formulation {
 			IloLinearNumExpr[] const2 = new IloLinearNumExpr[n];
 			for (int j = 1; j < n; j++) {
 				const2[j] = cplex.linearNumExpr();
-				for (int t = 1; t < days; t++) {
+				for (int t = 1; t < endDay; t++) {
 					for (int k = 0; k < l; k++) {
 						for (int i = 0; i < n; i++) {
 							if (T.get(i).contains(t) == T.get(j).contains(t)) {
@@ -136,23 +133,23 @@ public class Formulation {
 				cplex.addEq(const2[j], 1);
 			}
 
-			IloLinearNumExpr[][] const3 = new IloLinearNumExpr[l][days];
+			IloLinearNumExpr[][] const3 = new IloLinearNumExpr[l][endDay];
 			for (int k = 0; k < l; k++) {
-				for (int t = 1; t < days; t++) {
+				for (int t = 1; t < endDay; t++) {
 					const3[k][t] = cplex.linearNumExpr();
 					for (int j = 1; j < n; j++) {
 						if (T.get(j).contains(t))
 							const3[k][t].addTerm(1, x[0][j][t][k]);
 					}
-					cplex.addEq(const3[k][t], 1);
+					cplex.addLe(const3[k][t], 1);
 				}
 
 			}
 
-			IloLinearNumExpr[][][][] const4 = new IloLinearNumExpr[n][n][days][l];
+			IloLinearNumExpr[][][][] const4 = new IloLinearNumExpr[n][n][endDay][l];
 			for (int i = 1; i < n; i++) {
 				for (int j = 1; j < n; j++) {
-					for (int t = 1; t < days; t++) {
+					for (int t = 1; t < endDay; t++) {
 						for (int k = 0; k < l; k++) {
 							if (i != j) {
 								if (T.get(i).contains(t) == T.get(j).contains(t)) {
@@ -170,7 +167,7 @@ public class Formulation {
 			
 			for(int i = 0; i < n; i++) {
 				for(int k = 0; k <l; k++) {
-					for(int t = 1; t<days; t++)
+					for(int t = 1; t<endDay; t++)
 						cplex.addEq(x[i][i][t][k], 0);
 				}
 			}
@@ -185,7 +182,7 @@ public class Formulation {
 			System.out.println("Running time : " + (endTime - startTime) / 1000. + "sec");
 			System.out.println("Obj value :" + cplex.getObjValue());
 
-			for (int t = 1; t < days; t++) {
+			for (int t = 1; t < endDay; t++) {
 				System.out.println(t + "일에  각 차량 이동 경로 ");
 				for (int k = 0; k < l; k++) {
 					int i = 0;

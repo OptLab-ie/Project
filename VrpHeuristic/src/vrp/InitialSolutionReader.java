@@ -12,46 +12,46 @@ public class InitialSolutionReader {
     private static String str;
     private static int n = 0;
     private static int cnt = 0;
-    private static List<List<Integer>> routeDate;
-    private static List<Date> routes = new ArrayList<>();
-    private static String dataName = "initialtest";
+    private static List<List<Integer>> routes;
+    private static List<Date> dates = new ArrayList<>();
+    private static String dataName = "east-test";
     public static List<Date> readInitialSolution() throws IOException {
         BufferedReader reader = new BufferedReader(
-                new FileReader("/Users/hijieung/Desktop/"
+                new FileReader("/Users/phs/Desktop/OptLab/Project/InitialSolution/"
                         + dataName
                         + ".txt")
         );
 
         while ((str = reader.readLine()) != null) {
             if (str.length() == 1) {
-                if(routeDate!=null){
-                    Date date = new Date(n, routeDate);
-                    routes.add(date);
+                if(routes !=null){
+                    Date date = new Date(n, routes);
+                    dates.add(date);
                 }
                 n = Integer.parseInt(str);
-                routeDate = new ArrayList<>();
+                routes = new ArrayList<>();
                 cnt = 0;
             } else {
-                routeDate.add(new ArrayList<>());
+                routes.add(new ArrayList<>());
                 StringTokenizer st = new StringTokenizer(str);
                 while (st.hasMoreTokens()) {
-                    routeDate.get(cnt).add(Integer.parseInt(st.nextToken()));
+                    routes.get(cnt).add(Integer.parseInt(st.nextToken()));
                 }
                 cnt++;
             }
         }
-        Date date = new Date(n, routeDate);
-        routes.add(date);
-        for(int i=0; i<routes.size();i++){
-            System.out.println(routes.get(i).getDate());
-            for(int j=0; j<routes.get(i).getRoutes().size(); j++){
-                System.out.println(routes.get(i).getRoutes().get(j));
+        Date date = new Date(n, routes);
+        dates.add(date);
+        for(int i = 0; i< dates.size(); i++){
+            System.out.println(dates.get(i).getDate());
+            for(int j = 0; j< dates.get(i).getRoutes().size(); j++){
+                System.out.println(dates.get(i).getRoutes().get(j));
             }
         }
-        return routes;
+        return dates;
     }
-    public static void main(String[] args) throws IOException {
-        readInitialSolution();
-    }
+//    public static void main(String[] args) throws IOException {
+//        readInitialSolution();
+//    }
 }
 

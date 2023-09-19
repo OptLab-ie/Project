@@ -14,10 +14,10 @@ public class VrpReader {
 	private static int[] startDays;
 	private static int[] serviceTimes;
 	private static double[][] dists;
-	private static String dataName = "gwangsan-data-n15";
+	private static String dataName = "east-test-data-n31";
 
 
-	private static Path path = Paths.get("/Users/hijieung/Desktop/Opt_Project/Project/Data/"
+	private static Path path = Paths.get("/Users/phs/Desktop/OptLab/Project/Data/"
 			+ dataName
 			+ ".txt");
 
@@ -25,50 +25,52 @@ public class VrpReader {
 		List<String> allLines = Files.readAllLines(path);
 		String[] tmpdata;
 		n = Integer.parseInt(allLines.get(0));
-//		n = 20;
-		n = 19;
+
 		dists = new double[n][n];
 		serviceTimes = new int[n];
 		startDays = new int[n];
 
-		Random rand = new Random();
-		for(int i = 0; i < n; i++) {
-			for(int j = 0; j < n; j++) {
-				if(i == j) {
-					dists[i][j] = 0.;
-				}
-				dists[i][j] = rand.nextDouble() * 1000;
-			}
-		}
-		for (int i = 0; i < n; i++) {
-			startDays[i] = rand.nextInt(30);
-		}
-//		for(int i=1; i<n+1; i++) {
-//			tmpdata = allLines.get(i).split(",");
-//			for(int j=0; j<n; j++) {
-//				dists[i-1][j] = Double.parseDouble(tmpdata[j]);
+//		n = 20;
+//		n = 29;
+//		Random rand = new Random();
+//		for(int i = 0; i < n; i++) {
+//			for(int j = 0; j < n; j++) {
+//				if(i == j) {
+//					dists[i][j] = 0.;
+//				}
+//				dists[i][j] = rand.nextDouble() * 1000;
 //			}
 //		}
-//		
-//		tmpdata = allLines.get(n+2).split(",");
-////		tmpdata = allLines.get(91).split(",");
-//		for(int i=0; i<n; i++) {
-//				startDays[i] = Integer.parseInt(tmpdata[i]);
-//				System.out.println(tmpdata[i]);
+//		for (int i = 0; i < n; i++) {
+//			startDays[i] = rand.nextInt(30);
 //		}
-		for(int i=0; i<n; i++) {
-				startDays[i] = rand.nextInt(5)+1;
-		}
-//		
-//		tmpdata = allLines.get(n+2).split(",");
-////		tmpdata = allLines.get(92).split(",");
-//		for(int i=0; i<n; i++) {
-//			serviceTimes[i] = Integer.parseInt(tmpdata[i]);
+// 		for(int i=0; i<n; i++) {
+//				startDays[i] = rand.nextInt(5)+1;
 //		}
-		for(int i=0; i<n; i++) {
-			serviceTimes[i] = rand.nextInt(5);
+// 		for(int i=0; i<n; i++) {
+//			serviceTimes[i] = rand.nextInt(5);
+//		}
+//		serviceTimes[0] = 0;
+		for(int i=1; i<n+1; i++) {
+			tmpdata = allLines.get(i).split(",");
+			for(int j=0; j<n; j++) {
+				dists[i-1][j] = Double.parseDouble(tmpdata[j]);
+			}
 		}
-		serviceTimes[0] = 0;
+
+		tmpdata = allLines.get(n+1).split(",");
+//		tmpdata = allLines.get(91).split(",");
+		for(int i=0; i<n; i++) {
+				startDays[i] = Integer.parseInt(tmpdata[i]);
+				System.out.println(tmpdata[i]);
+		}
+
+		tmpdata = allLines.get(n+2).split(",");
+//		tmpdata = allLines.get(92).split(",");
+		for(int i=0; i<n; i++) {
+			serviceTimes[i] = Integer.parseInt(tmpdata[i]);
+		}
+
 
 		System.out.println("n: "+n);
 		System.out.println();

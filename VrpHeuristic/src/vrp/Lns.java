@@ -12,18 +12,19 @@ public class Lns {
 		this.rand = rand;
 	}
 
-	public void remove(VrpSolution sol, int numToRemove, Integer date) {
-		ArrayList<Integer> removedSites = new ArrayList<>();
-		ArrayList<Integer> remainingSites = new ArrayList<>();
-		int depot = 0;
+	public void remove(VrpSolution sol, int numToRemove) {
+		List<Integer> removedSites = new ArrayList<>();
+		List<Integer> assignedSites = new ArrayList<>();
+		List<Date> dates = sol.getDates();
 
+		int depot = 0;
 		// 해당하는 날짜 객체를 가져옴
-		Date d = sol.getRouteOfDate(date);
-		List<List<Integer>> consideringRoutes = d.getRoutes();
-		for (List<Integer> route : consideringRoutes) {
-			for (Integer siteID : route) {
-				if(siteID == depot) continue;
-				remainingSites.add(siteID);
+		for(Date date : dates){
+			for (List<Integer> route : date.getRoutes()) {
+				for (Integer siteID : route) {
+					if(siteID == depot) continue;
+					assignedSites.add(siteID);
+				}
 			}
 		}
 
@@ -32,14 +33,14 @@ public class Lns {
 			// take a random removed node
 			// 해당 날짜에 경로에 포함되어 있는 sites 중 제거할 인덱스를 하나 추출해야함
 			double random = rand.nextDouble();    // 0 ~ 1 사이 값
-			int index = (int) (random * remainingSites.size());
-			Integer removeSiteId = remainingSites.get(index);
-			remainingSites.remove(removeSiteId);
+			int index = (int) (random * assignedSites.size());
+			Integer removeSiteId = assignedSites.get(index);
+			assignedSites.remove(removeSiteId);
 			removedSites.add(removeSiteId);
 		}
 		// build the new solution
-		List<List<Integer>> newRoutes = buildRoutesWithoutRemovedSites(consideringRoutes, removedSites);
-		d.updateRoutes(newRoutes);
+		buildRoutesWithoutRemovedSites(dates, removedSites);
+//		d.updateRoutes(newRoutes);
 		// Date 객체의 경로 검사
 
 //		Iterator<List<Integer>> it = d.getRoutes().iterator();
@@ -47,43 +48,43 @@ public class Lns {
 //
 //			it.remove();
 //		}
-		removeEmptyRoute(d);
-		removeEmptyDate(sol, d, date);
+		removeEmptyRoute(dates);
+		removeEmptyDate(sol, dates);
 
 		sol.addRemovedSites(removedSites);
 	}
 
-	public void removeEmptyRoute(Date d){
-		for (int i = 0; i < problem.getNumVehicles(); i++) {
-			for(List<Integer> route : d.getRoutes()){
-				if(route.size() == 2){
-					d.getRoutes().remove(route);
-					break;
+	public void removeEmptyRoute(List<Date> dates){
+		int emptyRoute = 2;
+		for(Date date : dates){
+			for (int i = 0; i < problem.getNumVehicles(); i++) {
+				for(List<Integer> route : date.getRoutes()){
+					if(route.size() == emptyRoute){
+						date.getRoutes().remove(route);
+						break;
+					}
 				}
 			}
 		}
 	}
 
-	public void removeEmptyDate(VrpSolution sol, Date d, int date){
-		if(d.getRoutes().isEmpty()){
-			sol.getDates().remove(d);
-			sol.getNoRoutesDates().add(date);
-			sol.getHaveRoutesDates().remove(date);
+	public void removeEmptyDate(VrpSolution sol, List<Date> dates){
+		for(Date date : dates){
+			if(date.getRoutes().isEmpty()){
+				sol.getDates().remove(date);
+				sol.getNoRoutesDates().add(date.getDate());
+				sol.getHaveRoutesDates().remove(date.getDate());
+				break;
+			}
 		}
 	}
 
-	public List<List<Integer>> buildRoutesWithoutRemovedSites(List<List<Integer>> routes, List<Integer> removedSites) {
-		List<List<Integer>> newRoutes = new ArrayList<>(routes.size());
-		for (List<Integer> oldRoute : routes) {
-			List<Integer> newRoute = new ArrayList<>();
-			newRoutes.add(newRoute);
-			for (Integer siteID : oldRoute) {
-				if (!removedSites.contains(siteID)) {
-					newRoute.add(siteID);
-				}
+	public void buildRoutesWithoutRemovedSites(List<Date> dates, List<Integer> removedSites) {
+		for(Date date : dates){
+			for(List<Integer> route : date.getRoutes()){
+				route.removeAll(removedSites);
 			}
 		}
-		return newRoutes;
 	}
 
 	public void repair(VrpSolution sol){
@@ -144,10 +145,10 @@ public class Lns {
 		Site site = sites.get(removedId);
 		int availableDate = site.getAvailableDate();
 
-		for(Date r : sol.getDates()){
+		for(Date date : sol.getDates()){
 			// 1. 가능한 날짜 이후의 경로만 고려
-			if(r.getDate() > availableDate){
-				for(List<Integer> route : r.getRoutes()) {
+			if(date.getDate() > availableDate){
+				for(List<Integer> route : date.getRoutes()) {
 					// 2. 삽입할 노드의 서비스 타임 + 경로 총 소요시간 < 설정한 시간 이 조건을 만족하는 경로들만 탐색
 					if(sol.calWorkingTime(route) + site.getServiceTime() < problem.getTimeLimit()){
 						// 삽입가능한 경로 리스트 추가
@@ -217,7 +218,6 @@ public class Lns {
 	}
 
 	public boolean insertedSite(VrpSolution sol, List<Integer> route, Integer minId, Integer insertId) {
-		// TODO : 삽입할때 시간 유효성 검사 해야함
 
 		if(minId == 0){
 			List<Integer> route_init = copyRoute(route);

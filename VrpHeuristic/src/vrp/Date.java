@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Date {
-    private int date;   // id == index
+    private Integer date;   // id == index
     private List<List<Integer>> routes;
     private double totalCost;
     private double workingTime;
@@ -40,13 +40,12 @@ public class Date {
     public void updateRoutes(List<List<Integer>> routes){
         this.routes = routes;
     }
-    public void setDate(int date){
+    public void setDate(Integer date){
         this.date = date;
     }
-    public int getDate(){
+    public Integer getDate(){
         return this.date;
     }
-
 
 
 }

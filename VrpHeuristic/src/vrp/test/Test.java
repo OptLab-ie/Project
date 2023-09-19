@@ -1,11 +1,10 @@
 package vrp.test;
 
 import vrp.*;
+import vrp.Date;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 public class Test {
 
@@ -13,8 +12,8 @@ public class Test {
 		// TODO Auto-generated method stub
 		VrpProblem problem = VrpReader.readDataInstance();
 
-		List<Date> dates = buildRoutes();    // build routes
-//		List<Date> dates = InitialSolutionReader.readInitialSolution();
+//		List<Date> dates = buildRoutes();    // build routes
+		List<Date> dates = InitialSolutionReader.readInitialSolution();
 		VrpSolution sol = new VrpSolution(dates, problem);    // create solution
 //		sol.addDatesList(creatDummyRoutes(4));    // input date부터 30일까지(말일) Routes 더미 생성후 추가
 
@@ -25,11 +24,9 @@ public class Test {
 
 		sol.showRoutes();    // 변경 전 경로 출력
 
-		for (int step = 0; step < 3; step++) {
-			// 1일부터 4일까지 반복
-			for (int i = 1; i < 4; i++) {
-				lns.remove(sol, 2, i);
-			}
+		double beforeTime = System.currentTimeMillis(); //코드 실행 전에 시간 받아오기
+		for (int step = 0; step < 2; step++) {
+			lns.remove(sol, 15);
 
 			System.out.print("removedId : ");
 			for (Integer removedId : sol.getRemovedSites()) {
@@ -38,10 +35,18 @@ public class Test {
 			System.out.println();
 
 			lns.repair(sol);
-
 		}
+		double afterTime = System.currentTimeMillis(); // 코드 실행 후에 시간 받아오기
+		double secDiffTime = (afterTime - beforeTime)/1000; //두 시간에 차 계산
+		System.out.println("실행시간(m) : "+secDiffTime);
 
 		System.out.println("복구된 차량 경로");
+		Collections.sort(sol.getDates(), new Comparator<Date>() {
+			@Override
+			public int compare(Date o1, Date o2) {
+				return o1.getDate() - o2.getDate();
+			}
+		});
 		sol.showRoutes();
 
 		System.out.println("변경 후 총 거리 비용 : " + sol.calTotalCost());

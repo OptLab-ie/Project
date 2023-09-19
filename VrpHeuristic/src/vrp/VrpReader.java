@@ -17,7 +17,7 @@ public class VrpReader {
 	private static String dataName = "gwangsan-data-n15";
 
 
-	private static Path path = Paths.get("/Users/hijieung/Desktop/Opt_Project/Project/Data/"
+	private static Path path = Paths.get("/Users/hijieung/Desktop/OptLab/Project/Data/"
 			+ dataName
 			+ ".txt");
 

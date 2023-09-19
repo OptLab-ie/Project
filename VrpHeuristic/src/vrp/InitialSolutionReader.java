@@ -50,8 +50,8 @@ public class InitialSolutionReader {
         }
         return routes;
     }
-    public static void main(String[] args) throws IOException {
-        readInitialSolution();
-    }
+//    public static void main(String[] args) throws IOException {
+//        readInitialSolution();
+//    }
 }
 

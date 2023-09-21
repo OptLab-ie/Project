@@ -17,7 +17,7 @@ public class InitialSolutionReader {
     private static String dataName = "east-test";
     public static List<Date> readInitialSolution() throws IOException {
         BufferedReader reader = new BufferedReader(
-                new FileReader("/Users/phs/Desktop/OptLab/Project/InitialSolution/"
+                new FileReader("/Users/hijieung/Desktop/OptLab/Project/InitialSolution/"
                         + dataName
                         + ".txt")
         );

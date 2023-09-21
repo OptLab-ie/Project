@@ -16,8 +16,7 @@ public class VrpReader {
 	private static double[][] dists;
 	private static String dataName = "east-test-data-n31";
 
-
-	private static Path path = Paths.get("/Users/phs/Desktop/OptLab/Project/Data/"
+	private static Path path = Paths.get("/Users/hijieung/Desktop/OptLab/Project/Data/"
 			+ dataName
 			+ ".txt");
 

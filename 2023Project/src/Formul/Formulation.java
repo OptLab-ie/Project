@@ -111,11 +111,25 @@ public class Formulation {
 			
 			// TODO : T[i]값 관련 오류 해결해야함
 			for (int i = 0; i < n; i++) {
-				for (int j = 0; j < n; j++) {
-					for (int t = 1; t < T.get(i).get(0); t++) {
-						for(int k = 0; k < l; k++) {
-							cplex.addEq(x[i][j][t][k], 0);
-							cplex.addEq(x[j][i][t][k], 0);
+				if(T.get(i).size()==0) {
+					for (int j = 0; j < n; j++) {
+						for (int t = 1; t < endDay; t++) {
+							for(int k = 0; k < l; k++) {
+								cplex.addEq(x[i][j][t][k], 0);
+								cplex.addEq(x[j][i][t][k], 0);
+							}
+						}
+					}
+				}
+			}
+			for (int i = 0; i < n; i++) {
+				if(!(T.get(i).size() == 0)){
+					for (int j = 0; j < n; j++) {
+						for (int t = 1; t < T.get(i).get(0); t++) {
+							for(int k = 0; k < l; k++) {
+								cplex.addEq(x[i][j][t][k], 0);
+								cplex.addEq(x[j][i][t][k], 0);
+							}
 						}
 					}
 				}
@@ -150,7 +164,10 @@ public class Formulation {
 						}
 					}
 				}
-				cplex.addEq(const2[j], 1);
+				if(T.get(j).isEmpty()) {
+					cplex.addEq(const2[j], 0);
+				}
+				else cplex.addEq(const2[j], 1);
 			}
 
 			IloLinearNumExpr[][] const3 = new IloLinearNumExpr[l][endDay];
@@ -216,7 +233,7 @@ public class Formulation {
 			bw.write("Running time : " + (endTime - startTime) / 1000. + "sec");
 			bw.newLine();
 			
-			if(cplex.getStatus().equals(IloCplex.Status.Feasible) || cplex.getStatus().equals(IloCplex.Status.Optimal)) {
+//			if(cplex.getStatus().equals(IloCplex.Status.Feasible) || cplex.getStatus().equals(IloCplex.Status.Optimal)) {
 				System.out.println("Obj value :" + cplex.getObjValue());
 				bw.write("Obj value :" + cplex.getObjValue());
 				bw.newLine();
@@ -252,12 +269,12 @@ public class Formulation {
 					}
 					
 				}
-			}
-			else {
-				System.out.println("Error");
-				bw.write("Error");
-				bw.newLine();
-			}
+//			}
+//			else {
+//				System.out.println("Error");
+//				bw.write("Error");
+//				bw.newLine();
+//			}
 			
 			cplex.end();
 			bw.close();

@@ -17,17 +17,8 @@ public class GetData {
 	static String dataName = "gwangsan-data-n15";
 	
 	public static void main(String[] args)  {
-		
-		
-		Path path = Paths.get("C:\\Users\\최적화_연구실_PC1\\OneDrive - Chonnam National University\\바탕 화면\\OptLab-Project\\Project\\Data\\"
-				+ dataName
-				+ ".txt");
 
-<<<<<<< HEAD
-		Path path = Paths.get("//Users/hijieung/Desktop/Opt_Project/Project/Data/north-data.txt");
-		
-=======
->>>>>>> upstream/main
+		Path path = Paths.get("/Users/hijieung/Desktop/OptLab/Project/Data/북구-data-n77.txt");
 		try {
 			List<String> allLines = Files.readAllLines(path);
 			String[] tmpdata;
@@ -47,15 +38,15 @@ public class GetData {
 				}
 			}
 			
-//			tmpdata = allLines.get(n+1).split(",");
-			tmpdata = allLines.get(91).split(",");
+			tmpdata = allLines.get(n+1).split(",");
+//			tmpdata = allLines.get(91).split(",");
 			for(int i=0; i<n; i++) {
 					T[i] = Integer.parseInt(tmpdata[i]);
 					System.out.println(tmpdata[i]);
 			}
 			
-//			tmpdata = allLines.get(n+2).split(",");
-			tmpdata = allLines.get(92).split(",");
+			tmpdata = allLines.get(n+2).split(",");
+//			tmpdata = allLines.get(92).split(",");
 			for(int i=0; i<n; i++) {
 					s[i] = Double.parseDouble(tmpdata[i]);
 			}

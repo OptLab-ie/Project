@@ -14,12 +14,15 @@ public class VrpReader {
 	private static int[] startDays;
 	private static int[] serviceTimes;
 	private static double[][] dists;
-	private static String dataName = "east-test-data-n31";
+	private static String dataName = "동구-data";
 
 	private static Path path = Paths.get("/Users/hijieung/Desktop/OptLab/Project/Data/"
 			+ dataName
 			+ ".txt");
 
+	public String getDataName(){
+		return this.dataName;
+	}
 	public static VrpProblem readDataInstance() throws IOException {
 		List<String> allLines = Files.readAllLines(path);
 		String[] tmpdata;

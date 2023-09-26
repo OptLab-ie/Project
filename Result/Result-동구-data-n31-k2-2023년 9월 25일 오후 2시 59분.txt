@@ -1,0 +1,11 @@
+Running time : 0.01초
+변경 전 총 거리 비용 : 45649.2405289
+변경 후 총 거리 비용 : 35464.42139365
+2일의 차량 경로
+0 24 22 27 15 0 Working Time per route : 197.6315602967
+0 18 5 29 20 7 0 Working Time per route : 200.71673221199998
+8일의 차량 경로
+0 16 17 14 6 21 0 Working Time per route : 215.22086792989998
+27일의 차량 경로
+0 1 2 23 4 13 0 Working Time per route : 212.73517945870003
+0 12 11 3 19 26 0 Working Time per route : 229.16008149634996

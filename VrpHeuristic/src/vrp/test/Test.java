@@ -2,14 +2,17 @@ package vrp.test;
 
 import vrp.*;
 import vrp.Date;
-
 import java.io.IOException;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
-
+import java.io.BufferedWriter;
+import java.time.LocalDateTime;
+import java.io.FileWriter;
 public class Test {
 
 	public static void main(String[] args) throws IOException {
 		// TODO Auto-generated method stub
+
 		VrpProblem problem = VrpReader.readDataInstance();
 
 //		List<Date> dates = buildRoutes();    // build routes
@@ -21,12 +24,16 @@ public class Test {
 		Lns lns = new Lns(problem, rand);
 
 		System.out.println("변경 전 총 거리 비용 : " + sol.calTotalCost());
-
+		double beforeTotalCost = sol.calTotalCost();
 		sol.showRoutes();    // 변경 전 경로 출력
 
+		for (int i = 0; i < problem.getSites().size(); i++) {
+			System.out.println(i + " " + problem.getSites().get(i).getAvailableDate());
+		}
+
 		double beforeTime = System.currentTimeMillis(); //코드 실행 전에 시간 받아오기
-		for (int step = 0; step < 2; step++) {
-			lns.remove(sol, 15);
+		for (int step = 0; step < 5; step++) {
+			lns.remove(sol, problem.getNumCustomers()/2);
 
 			System.out.print("removedId : ");
 			for (Integer removedId : sol.getRemovedSites()) {
@@ -37,8 +44,8 @@ public class Test {
 			lns.repair(sol);
 		}
 		double afterTime = System.currentTimeMillis(); // 코드 실행 후에 시간 받아오기
-		double secDiffTime = (afterTime - beforeTime)/1000; //두 시간에 차 계산
-		System.out.println("실행시간(m) : "+secDiffTime);
+		double secDiffTime = (afterTime - beforeTime) / 1000; //두 시간에 차 계산
+		System.out.println("실행시간(m) : " + secDiffTime);
 
 		System.out.println("복구된 차량 경로");
 		Collections.sort(sol.getDates(), new Comparator<Date>() {
@@ -50,6 +57,38 @@ public class Test {
 		sol.showRoutes();
 
 		System.out.println("변경 후 총 거리 비용 : " + sol.calTotalCost());
+		double afterTotalCost = sol.calTotalCost();
+
+		VrpReader vr = new VrpReader();
+
+		LocalDateTime now = LocalDateTime.now();
+			DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy년 M월 d일 a h시 m분");
+			String nowString = now.format(dateTimeFormatter);
+		String problemSize = "n" + problem.getNumCustomers() + "-k" + problem.getNumVehicles() + "-";
+		String resultFileName = "Result-" + vr.getDataName() + "-" + problemSize + nowString + ".txt";
+
+		String resultPath = "/Users/hijieung/Desktop/OptLab/Project/Result/";
+		BufferedWriter bw = new BufferedWriter(new FileWriter(resultPath + resultFileName, false));
+
+		bw.write("Running time : " + secDiffTime + "초");
+		bw.newLine();
+		bw.write("변경 전 총 거리 비용 : " + beforeTotalCost);
+		bw.newLine();
+		bw.write("변경 후 총 거리 비용 : " + afterTotalCost);
+		bw.newLine();
+		for (Date d : dates) {
+			bw.write(d.getDate() + "일의 차량 경로");
+			bw.newLine();
+			for (List<Integer> route : d.getRoutes()) {
+				for (int i = 0; i < route.size(); i++) {
+					bw.write(route.get(i) + " ");
+				}
+				bw.write("Working Time per route : " + sol.calWorkingTime(route));
+				bw.newLine();
+			}
+		}
+		bw.close();
+
 	}
 
 	public static List<Date> creatDummyRoutes(int date){
@@ -70,60 +109,60 @@ public class Test {
 		return dateList;
 	}
 
-	public static List<Date> buildRoutes(){
-		List<Date> routes = new ArrayList<>();    // solution
-
-		List<List<Integer>> routeDate1 = new ArrayList<>();    // route of date1
-		routeDate1.add(new ArrayList<>());
-		routeDate1.add(new ArrayList<>());
-		// vehicle 0
-		routeDate1.get(0).add(0);
-		routeDate1.get(0).add(1);
-		routeDate1.get(0).add(2);
-		routeDate1.get(0).add(3);
-		routeDate1.get(0).add(0);
-		// vehicle 1
-		routeDate1.get(1).add(0);
-		routeDate1.get(1).add(4);
-		routeDate1.get(1).add(5);
-		routeDate1.get(1).add(6);
-		routeDate1.get(1).add(0);
-		Date r1 = new Date(1, routeDate1);
-		routes.add(r1);
-
-		List<List<Integer>> routeDate2 = new ArrayList<>();    // route of date1
-		routeDate2.add(new ArrayList<>());
-		routeDate2.add(new ArrayList<>());
-		routeDate2.get(0).add(0);
-		routeDate2.get(0).add(7);
-		routeDate2.get(0).add(8);
-		routeDate2.get(0).add(9);
-		routeDate2.get(0).add(0);
-		routeDate2.get(1).add(0);
-		routeDate2.get(1).add(10);
-		routeDate2.get(1).add(11);
-		routeDate2.get(1).add(12);
-		routeDate2.get(1).add(0);
-		Date r2 = new Date(2, routeDate2);
-		routes.add(r2);
-
-		List<List<Integer>> routeDate3 = new ArrayList<>();    // route of date1
-		routeDate3.add(new ArrayList<>());
-		routeDate3.add(new ArrayList<>());
-		routeDate3.get(0).add(0);
-		routeDate3.get(0).add(13);
-		routeDate3.get(0).add(14);
-		routeDate3.get(0).add(15);
-		routeDate3.get(0).add(0);
-		routeDate3.get(1).add(0);
-		routeDate3.get(1).add(16);
-		routeDate3.get(1).add(17);
-		routeDate3.get(1).add(18);
-		routeDate3.get(1).add(0);
-		Date r3 = new Date(3, routeDate3);
-		routes.add(r3);
-
-		return routes;
-	}
+//	public static List<Date> buildRoutes(){
+//		List<Date> routes = new ArrayList<>();    // solution
+//
+//		List<List<Integer>> routeDate1 = new ArrayList<>();    // route of date1
+//		routeDate1.add(new ArrayList<>());
+//		routeDate1.add(new ArrayList<>());
+//		// vehicle 0
+//		routeDate1.get(0).add(0);
+//		routeDate1.get(0).add(1);
+//		routeDate1.get(0).add(2);
+//		routeDate1.get(0).add(3);
+//		routeDate1.get(0).add(0);
+//		// vehicle 1
+//		routeDate1.get(1).add(0);
+//		routeDate1.get(1).add(4);
+//		routeDate1.get(1).add(5);
+//		routeDate1.get(1).add(6);
+//		routeDate1.get(1).add(0);
+//		Date r1 = new Date(1, routeDate1);
+//		routes.add(r1);
+//
+//		List<List<Integer>> routeDate2 = new ArrayList<>();    // route of date1
+//		routeDate2.add(new ArrayList<>());
+//		routeDate2.add(new ArrayList<>());
+//		routeDate2.get(0).add(0);
+//		routeDate2.get(0).add(7);
+//		routeDate2.get(0).add(8);
+//		routeDate2.get(0).add(9);
+//		routeDate2.get(0).add(0);
+//		routeDate2.get(1).add(0);
+//		routeDate2.get(1).add(10);
+//		routeDate2.get(1).add(11);
+//		routeDate2.get(1).add(12);
+//		routeDate2.get(1).add(0);
+//		Date r2 = new Date(2, routeDate2);
+//		routes.add(r2);
+//
+//		List<List<Integer>> routeDate3 = new ArrayList<>();    // route of date1
+//		routeDate3.add(new ArrayList<>());
+//		routeDate3.add(new ArrayList<>());
+//		routeDate3.get(0).add(0);
+//		routeDate3.get(0).add(13);
+//		routeDate3.get(0).add(14);
+//		routeDate3.get(0).add(15);
+//		routeDate3.get(0).add(0);
+//		routeDate3.get(1).add(0);
+//		routeDate3.get(1).add(16);
+//		routeDate3.get(1).add(17);
+//		routeDate3.get(1).add(18);
+//		routeDate3.get(1).add(0);
+//		Date r3 = new Date(3, routeDate3);
+//		routes.add(r3);
+//
+//		return routes;
+//	}
 
 }

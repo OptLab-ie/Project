@@ -131,13 +131,25 @@ public class Lns {
 
 	}
 
+	private Integer chooseRandomDate(List<Integer> noRoutesDates, Integer removedId) {
+		System.out.println("Dafasodfjopadjfopajsdfopjsadpfoajfpodjapfo");
+		List<Site> sites = problem.getSites();
+		Site site = sites.get(removedId);
+		int availableDate = site.getAvailableDate();
+		int index;
+		while(true) {
+			double random = rand.nextDouble();
+			index = (int) (random * noRoutesDates.size());
+			if(noRoutesDates.get(index) > availableDate) return noRoutesDates.get(index);
+		}
+	}
+
 	private Integer chooseRandomDate(List<Integer> noRoutesDates) {
 		double random = rand.nextDouble();
 		int index = (int) (random * noRoutesDates.size());
 		Integer date = noRoutesDates.get(index);
 		return date;
 	}
-
 	private void findAvailableRoutes(VrpSolution sol, List<List<Integer>> availableRoutes, Integer removedId) {
 		List<Site> sites = problem.getSites();
 
@@ -160,9 +172,12 @@ public class Lns {
 	}
 
 	public boolean insertedWithoutMinSite(Integer removedId, VrpSolution sol){
+		List<Site> sites = problem.getSites();
+		Site site = sites.get(removedId);
+
 		// 차량 운행을 1대만 스케줄링하고 있는 날짜가 있는 경우
 		for(Date date : sol.getDates()){
-			if(date.getRoutes().size() < problem.getNumVehicles()){
+			if(date.getDate() >= site.getAvailableDate() && date.getRoutes().size() < problem.getNumVehicles()){
 				List<Integer> route = createNewRoute(removedId);
 				date.addRoute(route);
 				return true;
@@ -176,7 +191,9 @@ public class Lns {
 	private void createNewSchedule(Integer removedId, VrpSolution sol) {
 		// 경로가 존재하지 않는 날짜 중 어느 날짜에 삽입할지 랜덤으로 결정
 		List<Integer> noRoutesDates = sol.getNoRoutesDates();
-		Integer date = chooseRandomDate(noRoutesDates);
+//		Integer date = chooseRandomDate(noRoutesDates);
+		Integer date = chooseRandomDate(noRoutesDates, removedId);
+
 		// 새로운 Date 객체 생성
 		Date D = new Date(date);
 		// 새로운 경로 생성

@@ -76,7 +76,6 @@ public class VrpProblem {
 		// 시간 = 거리/속력
 		// 60km/h = 1000m/m
 	}
-
 	public int getNumCustomers() {
 		return this.numCustomers;
 	}

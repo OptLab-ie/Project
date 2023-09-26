@@ -14,7 +14,7 @@ public class InitialSolutionReader {
     private static int cnt = 0;
     private static List<List<Integer>> routes;
     private static List<Date> dates = new ArrayList<>();
-    private static String dataName = "east-test";
+    private static String dataName = "동구_solution";
     public static List<Date> readInitialSolution() throws IOException {
         BufferedReader reader = new BufferedReader(
                 new FileReader("/Users/hijieung/Desktop/OptLab/Project/InitialSolution/"
@@ -23,8 +23,8 @@ public class InitialSolutionReader {
         );
 
         while ((str = reader.readLine()) != null) {
-            if (str.length() == 1) {
-                if(routes !=null){
+            if (str.length() < 3) {
+                if(routes != null){
                     Date date = new Date(n, routes);
                     dates.add(date);
                 }
@@ -50,8 +50,5 @@ public class InitialSolutionReader {
         }
         return dates;
     }
-//    public static void main(String[] args) throws IOException {
-//        readInitialSolution();
-//    }
 }
 

@@ -7,3 +7,4 @@
 ## Large Neighbor Search 구현
 Large Neighbor Search의 모든 구현 과정은 페어 프로그래밍으로 이루어졌고,  
 삭제는 랜덤, 복구는 Nearest로 이루어지게 구현하였다.
+해당 repo는 Cplex를 활용한 모델 구현과 그를 개선하기 위한 LNS 구현에 대한 부분으로 이루어졌다.
